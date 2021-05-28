@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chao.travel.guide.mapper.TravelNotesDetailMapper">
+  <resultMap id="BaseResultMap" type="com.chao.travel.guide.entity.TravelNotesDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="travel_notes_id" jdbcType="INTEGER" property="travelNotesId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="detail" jdbcType="VARCHAR" property="detail" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, travel_notes_id, title, detail
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_travel_notes_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_travel_notes_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chao.travel.guide.entity.TravelNotesDetail">
+    insert into t_travel_notes_detail (id, travel_notes_id, title, 
+      detail)
+    values (#{id,jdbcType=INTEGER}, #{travelNotesId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
+      #{detail,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chao.travel.guide.entity.TravelNotesDetail">
+    insert into t_travel_notes_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="travelNotesId != null">
+        travel_notes_id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="detail != null">
+        detail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="travelNotesId != null">
+        #{travelNotesId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        #{detail,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chao.travel.guide.entity.TravelNotesDetail">
+    update t_travel_notes_detail
+    <set>
+      <if test="travelNotesId != null">
+        travel_notes_id = #{travelNotesId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        detail = #{detail,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chao.travel.guide.entity.TravelNotesDetail">
+    update t_travel_notes_detail
+    set travel_notes_id = #{travelNotesId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

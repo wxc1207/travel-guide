@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chao.travel.guide.mapper.ViewMapper">
+    <resultMap id="BaseResultMap" type="com.chao.travel.guide.entity.View">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="english_name" jdbcType="VARCHAR" property="englishName"/>
+        <result column="subtitle" jdbcType="VARCHAR" property="subtitle"/>
+        <result column="main_image" jdbcType="VARCHAR" property="mainImage"/>
+        <result column="sub_images" jdbcType="VARCHAR" property="subImages"/>
+        <result column="detail" jdbcType="VARCHAR" property="detail"/>
+        <result column="traffic" jdbcType="VARCHAR" property="traffic"/>
+        <result column="ticket" jdbcType="VARCHAR" property="ticket"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="need_time" jdbcType="TIMESTAMP" property="needTime"/>
+        <result column="opening_hours" jdbcType="TIMESTAMP" property="openingHours"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="watch_count" jdbcType="INTEGER" property="watchCount"/>
+        <result column="praise_count" jdbcType="INTEGER" property="praiseCount"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+
+    <resultMap id="ViewCategoryResultMap" type="com.chao.travel.guide.entity.View">
+        <id column="view_id" jdbcType="INTEGER" property="id"/>
+        <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="english_name" jdbcType="VARCHAR" property="englishName"/>
+        <result column="subtitle" jdbcType="VARCHAR" property="subtitle"/>
+        <result column="main_image" jdbcType="VARCHAR" property="mainImage"/>
+        <result column="sub_images" jdbcType="VARCHAR" property="subImages"/>
+        <result column="detail" jdbcType="VARCHAR" property="detail"/>
+        <result column="traffic" jdbcType="VARCHAR" property="traffic"/>
+        <result column="ticket" jdbcType="VARCHAR" property="ticket"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="need_time" jdbcType="TIMESTAMP" property="needTime"/>
+        <result column="opening_hours" jdbcType="TIMESTAMP" property="openingHours"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="watch_count" jdbcType="INTEGER" property="watchCount"/>
+        <result column="praise_count" jdbcType="INTEGER" property="praiseCount"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <association property="viewCategory" javaType="com.chao.travel.guide.entity.ViewCategory">
+            <id column="cid" property="id"/>
+            <result column="category_name" property="name"/>
+            <result column="status" property="status"/>
+            <result column="sort_order" property="sortOrder"/>
+        </association>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, category_id, name, english_name, subtitle, main_image, sub_images, detail, traffic, 
+    ticket, phone, need_time, opening_hours, address, watch_count, praise_count, create_time, 
+    update_time
+  </sql>
+
+    <select id="listViewWithCategoryDesc" resultMap="ViewCategoryResultMap">
+        select v.id view_id,category_id,v.name,english_name,subtitle,main_image,sub_images,detail,traffic,
+        ticket,phone,need_time,opening_hours,address,watch_count,praise_count,
+        c.id cid,c.name category_name,status,sort_order
+        from t_view v,t_view_category c where
+        v.category_id = c.id order by sort_order
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_view
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="listViewByViewCategoryK" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_view
+        where category_id = 2
+        limit #{limitNum}
+    </select>
+    <select id="listViewByViewCategoryJ" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_view
+        where category_id = 1
+        limit #{limitNum}
+    </select>
+    <select id="listView" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_view
+    </select>
+
+    <select id="listViewByWatchCount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_view
+        order by watch_count desc limit #{limitNum}
+    </select>
+    <select id="listViewByPraiseCount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_view
+        order by praise_count desc limit #{limitNum}
+    </select>
+
+    <select id="listViewByName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_view
+        where name like concat('%',#{name},'%')
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_view
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByIds">
+        delete from t_view where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <insert id="insert" parameterType="com.chao.travel.guide.entity.View">
+    insert into t_view (id, category_id, name, 
+      english_name, subtitle, main_image, 
+      sub_images, detail, traffic, 
+      ticket, phone, need_time, 
+      opening_hours, address, watch_count, 
+      praise_count, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{englishName,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR}, #{mainImage,jdbcType=VARCHAR}, 
+      #{subImages,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, #{traffic,jdbcType=VARCHAR}, 
+      #{ticket,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{needTime,jdbcType=TIMESTAMP}, 
+      #{openingHours,jdbcType=TIMESTAMP}, #{address,jdbcType=VARCHAR}, #{watchCount,jdbcType=INTEGER}, 
+      #{praiseCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.chao.travel.guide.entity.View">
+        insert into t_view
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="categoryId != null">
+                category_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="englishName != null">
+                english_name,
+            </if>
+            <if test="subtitle != null">
+                subtitle,
+            </if>
+            <if test="mainImage != null">
+                main_image,
+            </if>
+            <if test="subImages != null">
+                sub_images,
+            </if>
+            <if test="detail != null">
+                detail,
+            </if>
+            <if test="traffic != null">
+                traffic,
+            </if>
+            <if test="ticket != null">
+                ticket,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="needTime != null">
+                need_time,
+            </if>
+            <if test="openingHours != null">
+                opening_hours,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="watchCount != null">
+                watch_count,
+            </if>
+            <if test="praiseCount != null">
+                praise_count,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="categoryId != null">
+                #{categoryId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="englishName != null">
+                #{englishName,jdbcType=VARCHAR},
+            </if>
+            <if test="subtitle != null">
+                #{subtitle,jdbcType=VARCHAR},
+            </if>
+            <if test="mainImage != null">
+                #{mainImage,jdbcType=VARCHAR},
+            </if>
+            <if test="subImages != null">
+                #{subImages,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null">
+                #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="traffic != null">
+                #{traffic,jdbcType=VARCHAR},
+            </if>
+            <if test="ticket != null">
+                #{ticket,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="needTime != null">
+                #{needTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="openingHours != null">
+                #{openingHours,jdbcType=TIMESTAMP},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="watchCount != null">
+                #{watchCount,jdbcType=INTEGER},
+            </if>
+            <if test="praiseCount != null">
+                #{praiseCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.chao.travel.guide.entity.View">
+        update t_view
+        <set>
+            <if test="categoryId != null">
+                category_id = #{categoryId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="englishName != null">
+                english_name = #{englishName,jdbcType=VARCHAR},
+            </if>
+            <if test="subtitle != null">
+                subtitle = #{subtitle,jdbcType=VARCHAR},
+            </if>
+            <if test="mainImage != null">
+                main_image = #{mainImage,jdbcType=VARCHAR},
+            </if>
+            <if test="subImages != null">
+                sub_images = #{subImages,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null">
+                detail = #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="traffic != null">
+                traffic = #{traffic,jdbcType=VARCHAR},
+            </if>
+            <if test="ticket != null">
+                ticket = #{ticket,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="needTime != null">
+                need_time = #{needTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="openingHours != null">
+                opening_hours = #{openingHours,jdbcType=TIMESTAMP},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="watchCount != null">
+                watch_count = #{watchCount,jdbcType=INTEGER},
+            </if>
+            <if test="praiseCount != null">
+                praise_count = #{praiseCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.chao.travel.guide.entity.View">
+    update t_view
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      english_name = #{englishName,jdbcType=VARCHAR},
+      subtitle = #{subtitle,jdbcType=VARCHAR},
+      main_image = #{mainImage,jdbcType=VARCHAR},
+      sub_images = #{subImages,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR},
+      traffic = #{traffic,jdbcType=VARCHAR},
+      ticket = #{ticket,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      need_time = #{needTime,jdbcType=TIMESTAMP},
+      opening_hours = #{openingHours,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      watch_count = #{watchCount,jdbcType=INTEGER},
+      praise_count = #{praiseCount,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

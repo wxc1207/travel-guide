@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chao.travel.guide.mapper.TravelNotesMapper">
+    <resultMap id="BaseResultMap" type="com.chao.travel.guide.entity.TravelNotes">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="main_image" jdbcType="VARCHAR" property="mainImage"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="start_day" jdbcType="VARCHAR" property="startDay"/>
+        <result column="start_number" jdbcType="VARCHAR" property="startNumber"/>
+        <result column="average_cost" jdbcType="VARCHAR" property="averageCost"/>
+        <result column="watch_count" jdbcType="INTEGER" property="watchCount"/>
+        <result column="praise_count" jdbcType="INTEGER" property="praiseCount"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_id, title, main_image, start_time, start_day, start_number, average_cost, 
+    watch_count, praise_count, create_time, update_time
+  </sql>
+    <select id="listTravelNotesByWatchCount" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_travel_notes
+        order by watch_count desc limit #{limitNum}
+    </select>
+
+    <select id="listTravelNotesByPraiseCount" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_travel_notes
+        order by praise_count desc limit #{limitNum}
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_travel_notes
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="listTravelNotes" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_travel_notes
+    </select>
+    <select id="listTravelByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_travel_notes
+        where user_id = #{userId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_travel_notes
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteTravelByUserId" parameterType="java.lang.Integer">
+    delete from t_travel_notes
+    where user_id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.chao.travel.guide.entity.TravelNotes">
+    insert into t_travel_notes (id, user_id, title, 
+      main_image, start_time, start_day, 
+      start_number, average_cost, watch_count, 
+      praise_count, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
+      #{mainImage,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{startDay,jdbcType=VARCHAR}, 
+      #{startNumber,jdbcType=VARCHAR}, #{averageCost,jdbcType=VARCHAR}, #{watchCount,jdbcType=INTEGER}, 
+      #{praiseCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.chao.travel.guide.entity.TravelNotes">
+        insert into t_travel_notes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="mainImage != null">
+                main_image,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="startDay != null">
+                start_day,
+            </if>
+            <if test="startNumber != null">
+                start_number,
+            </if>
+            <if test="averageCost != null">
+                average_cost,
+            </if>
+            <if test="watchCount != null">
+                watch_count,
+            </if>
+            <if test="praiseCount != null">
+                praise_count,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="mainImage != null">
+                #{mainImage,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startDay != null">
+                #{startDay,jdbcType=VARCHAR},
+            </if>
+            <if test="startNumber != null">
+                #{startNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="averageCost != null">
+                #{averageCost,jdbcType=VARCHAR},
+            </if>
+            <if test="watchCount != null">
+                #{watchCount,jdbcType=INTEGER},
+            </if>
+            <if test="praiseCount != null">
+                #{praiseCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.chao.travel.guide.entity.TravelNotes">
+        update t_travel_notes
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="mainImage != null">
+                main_image = #{mainImage,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startDay != null">
+                start_day = #{startDay,jdbcType=VARCHAR},
+            </if>
+            <if test="startNumber != null">
+                start_number = #{startNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="averageCost != null">
+                average_cost = #{averageCost,jdbcType=VARCHAR},
+            </if>
+            <if test="watchCount != null">
+                watch_count = #{watchCount,jdbcType=INTEGER},
+            </if>
+            <if test="praiseCount != null">
+                praise_count = #{praiseCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.chao.travel.guide.entity.TravelNotes">
+    update t_travel_notes
+    set user_id = #{userId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      main_image = #{mainImage,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      start_day = #{startDay,jdbcType=VARCHAR},
+      start_number = #{startNumber,jdbcType=VARCHAR},
+      average_cost = #{averageCost,jdbcType=VARCHAR},
+      watch_count = #{watchCount,jdbcType=INTEGER},
+      praise_count = #{praiseCount,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

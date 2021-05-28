@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="travelGuideImages">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/配置资料/travelGuideImages.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

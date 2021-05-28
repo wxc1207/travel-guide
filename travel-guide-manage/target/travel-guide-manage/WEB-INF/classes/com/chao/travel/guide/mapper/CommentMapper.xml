@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chao.travel.guide.mapper.CommentMapper">
+    <resultMap id="BaseResultMap" type="com.chao.travel.guide.entity.Comment">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="view_id" jdbcType="INTEGER" property="viewId"/>
+        <result column="guide_id" jdbcType="INTEGER" property="guideId"/>
+        <result column="travel_notes_id" jdbcType="INTEGER" property="travelNotesId"/>
+        <result column="question_answer_id" jdbcType="INTEGER" property="questionAnswerId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="WithQuestionAnswerResultMap" type="com.chao.travel.guide.entity.Comment">
+        <id column="c_id" jdbcType="INTEGER" property="id"/>
+        <result column="view_id" jdbcType="INTEGER" property="viewId"/>
+        <result column="guide_id" jdbcType="INTEGER" property="guideId"/>
+        <result column="travel_notes_id" jdbcType="INTEGER" property="travelNotesId"/>
+        <result column="question_answer_id" jdbcType="INTEGER" property="questionAnswerId"/>
+        <result column="c_user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="c_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="c_create_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <association property="questionAnswer" javaType="com.chao.travel.guide.entity.QuestionAnswer">
+            <id column="q_id" jdbcType="INTEGER" property="id"/>
+            <result column="q_user_id"  property="userId"/>
+            <result column="question"  property="question"/>
+            <result column="watch_count"  property="watchCount"/>
+            <result column="praise_count"  property="praiseCount"/>
+            <result column="q_create_time"  property="createTime"/>
+            <result column="q_update_time"  property="updateTime"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, view_id, guide_id, travel_notes_id, question_answer_id, user_id, comment,create_time,update_time
+
+  </sql>
+
+    <select id="listWithQuestionAnswer" resultMap="WithQuestionAnswerResultMap">
+    select
+    c.id c_id, view_id, guide_id, travel_notes_id, question_answer_id, c.user_id c_user_id, comment,
+    c.create_time c_create_time,c.update_time c_create_time,
+
+    q.id q_id, q.user_id q_user_id, question, watch_count, praise_count,
+    q.create_time q_create_time, q.update_time q_update_time
+    from
+    t_comment c,t_question_answer q
+    where
+    question_answer_id = q.id
+
+  </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_comment
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.chao.travel.guide.entity.Comment">
+    insert into t_comment (id, view_id, guide_id, 
+      travel_notes_id, question_answer_id, user_id, 
+      comment)
+    values (#{id,jdbcType=INTEGER}, #{viewId,jdbcType=INTEGER}, #{guideId,jdbcType=INTEGER}, 
+      #{travelNotesId,jdbcType=INTEGER}, #{questionAnswerId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{comment,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.chao.travel.guide.entity.Comment">
+        insert into t_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="viewId != null">
+                view_id,
+            </if>
+            <if test="guideId != null">
+                guide_id,
+            </if>
+            <if test="travelNotesId != null">
+                travel_notes_id,
+            </if>
+            <if test="questionAnswerId != null">
+                question_answer_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="comment != null">
+                comment,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="viewId != null">
+                #{viewId,jdbcType=INTEGER},
+            </if>
+            <if test="guideId != null">
+                #{guideId,jdbcType=INTEGER},
+            </if>
+            <if test="travelNotesId != null">
+                #{travelNotesId,jdbcType=INTEGER},
+            </if>
+            <if test="questionAnswerId != null">
+                #{questionAnswerId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.chao.travel.guide.entity.Comment">
+        update t_comment
+        <set>
+            <if test="viewId != null">
+                view_id = #{viewId,jdbcType=INTEGER},
+            </if>
+            <if test="guideId != null">
+                guide_id = #{guideId,jdbcType=INTEGER},
+            </if>
+            <if test="travelNotesId != null">
+                travel_notes_id = #{travelNotesId,jdbcType=INTEGER},
+            </if>
+            <if test="questionAnswerId != null">
+                question_answer_id = #{questionAnswerId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="comment != null">
+                comment = #{comment,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.chao.travel.guide.entity.Comment">
+    update t_comment
+    set view_id = #{viewId,jdbcType=INTEGER},
+      guide_id = #{guideId,jdbcType=INTEGER},
+      travel_notes_id = #{travelNotesId,jdbcType=INTEGER},
+      question_answer_id = #{questionAnswerId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      comment = #{comment,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

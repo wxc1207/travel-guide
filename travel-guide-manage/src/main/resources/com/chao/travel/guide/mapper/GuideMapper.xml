@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chao.travel.guide.mapper.GuideMapper">
+    <resultMap id="BaseResultMap" type="com.chao.travel.guide.entity.Guide">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="detail" jdbcType="VARCHAR" property="detail"/>
+        <result column="watch_count" jdbcType="INTEGER" property="watchCount"/>
+        <result column="praise_count" jdbcType="INTEGER" property="praiseCount"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <resultMap id="GuideWithCategoryResultMap" type="com.chao.travel.guide.entity.Guide">
+        <id column="gid" jdbcType="INTEGER" property="id"/>
+        <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="detail" jdbcType="VARCHAR" property="detail"/>
+        <result column="watch_count" jdbcType="INTEGER" property="watchCount"/>
+        <result column="praise_count" jdbcType="INTEGER" property="praiseCount"/>
+        <result column="g_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="g_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <association property="guideCategory" javaType="com.chao.travel.guide.entity.GuideCategory">
+          <id column="cid" property="id"/>
+          <result column="name" property="name"/>
+          <result column="status" property="status"/>
+          <result column="sort_order" property="sortOrder"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, category_id, user_id, title, start_time, detail, watch_count, praise_count, create_time, 
+    update_time
+  </sql>
+
+    <select id="listGuideWithCategory" resultMap="GuideWithCategoryResultMap">
+    select
+    g.id gid, category_id, user_id, title, start_time, detail, watch_count, praise_count, g.create_time g_create_time,
+    g.update_time g_update_time,c.id cid,name,status,sort_order
+    from t_guide g,t_guide_category c where category_id = c.id
+  </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_guide
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByIds">
+        delete from t_guide where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_guide
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.chao.travel.guide.entity.Guide">
+    insert into t_guide (id, category_id, user_id, 
+      title, start_time, detail, 
+      watch_count, praise_count, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{title,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{detail,jdbcType=VARCHAR}, 
+      #{watchCount,jdbcType=INTEGER}, #{praiseCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.chao.travel.guide.entity.Guide">
+        insert into t_guide
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="categoryId != null">
+                category_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="detail != null">
+                detail,
+            </if>
+            <if test="watchCount != null">
+                watch_count,
+            </if>
+            <if test="praiseCount != null">
+                praise_count,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="categoryId != null">
+                #{categoryId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="detail != null">
+                #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="watchCount != null">
+                #{watchCount,jdbcType=INTEGER},
+            </if>
+            <if test="praiseCount != null">
+                #{praiseCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.chao.travel.guide.entity.Guide">
+        update t_guide
+        <set>
+            <if test="categoryId != null">
+                category_id = #{categoryId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="detail != null">
+                detail = #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="watchCount != null">
+                watch_count = #{watchCount,jdbcType=INTEGER},
+            </if>
+            <if test="praiseCount != null">
+                praise_count = #{praiseCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.chao.travel.guide.entity.Guide">
+    update t_guide
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      detail = #{detail,jdbcType=VARCHAR},
+      watch_count = #{watchCount,jdbcType=INTEGER},
+      praise_count = #{praiseCount,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
